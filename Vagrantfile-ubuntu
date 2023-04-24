@@ -1,0 +1,65 @@
+VAGRANTFILE_API_VERSION = "2"
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+  # Use the same key for each machine
+  config.ssh.insert_key = false
+  # config.vm.network "public_network"
+  config.vm.provision "file", source: "C:\\data\\af\\", destination: "/home/vagrant/"
+  # config.vm.provision "file", source: "~/.ssh/id_rsa.pub", destination: "~/.ssh/me.pub"
+  config.vm.provider "virtualbox" do |v|
+    v.memory = 6000
+  
+end
+
+
+
+###################### Docker and Kubernetes ###################
+
+
+config.vm.define "c1-cp1" do |v|
+  v.vm.box = "ubuntu/lunar64"
+    v.vm.hostname = "c1-cp1"
+  v.vbguest.installer_options = { allow_kernel_upgrade: true }
+  v.vm.synced_folder "C:/data/vagrant/playbooks", "/vagrant", type: "virtualbox"
+  v.vm.network "private_network", ip: "172.16.94.10"
+  
+
+end
+
+config.vm.define "c1-node1" do |v|
+  v.vm.box = "ubuntu/lunar64"
+    v.vm.hostname = "c1-node1"
+  v.vbguest.installer_options = { allow_kernel_upgrade: true }
+  v.vm.synced_folder "C:/data/vagrant/playbooks", "/vagrant", type: "virtualbox"
+  v.vm.network "private_network", ip: "172.16.94.11"
+  
+
+end
+
+
+
+config.vm.define "c1-node2" do |v|
+  v.vm.box = "ubuntu/lunar64"
+  v.vm.hostname = "c1-node2"
+  v.vbguest.installer_options = { allow_kernel_upgrade: true }
+  v.vm.synced_folder "C:/data/vagrant/playbooks", "/vagrant", type: "virtualbox"
+  
+  v.vm.network "private_network", ip: "172.16.94.12"
+  
+  
+end
+
+config.vm.define "c1-node3" do |v|
+  v.vm.box = "ubuntu/lunar64"
+  v.vm.hostname = "c1-node3"
+  v.vbguest.installer_options = { allow_kernel_upgrade: true }
+  v.vm.synced_folder "C:/data/vagrant/playbooks", "/vagrant", type: "virtualbox"
+  v.vm.network "private_network", 
+  :virtualbox__network_name => 'secondary_vagrant_private_net',
+  ip: "172.16.94.13"
+  
+
+end
+
+ 
+  
+end

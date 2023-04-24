@@ -1,0 +1,103 @@
+VAGRANTFILE_API_VERSION = "2"
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+  # Use the same key for each machine
+  config.ssh.insert_key = false
+  # config.vm.network "public_network"
+  config.vm.provision "file", source: "C:\\data\\af\\", destination: "/home/vagrant/"
+  # config.vm.provision "file", source: "~/.ssh/id_rsa.pub", destination: "~/.ssh/me.pub"
+  config.vm.provider "virtualbox" do |v|
+    v.memory = 6000
+  
+end
+
+
+
+###################### Docker and Kubernetes ###################
+
+
+config.vm.define "v3" do |v|
+  v.vm.box = "centos/7"
+    v.vm.hostname = "v3"
+  v.vbguest.installer_options = { allow_kernel_upgrade: true }
+  v.vm.synced_folder "C:/data/vagrant/playbooks", "/vagrant", type: "virtualbox"
+  v.vm.network "private_network", ip: "192.168.121.110"
+  # v.vm.network "public_network", ip: "192.168.121.8"
+  
+  v.vm.network "forwarded_port", guest: 8080, host: 8083
+  # Postgres
+  v.vm.network "forwarded_port", guest: 5432, host: 5433
+  # Redis
+  v.vm.network "forwarded_port", guest: 6379, host: 6373
+  # v.vm.network "forwarded_port", guest: 7770, host: 7771
+  #celery flower port
+  v.vm.network "forwarded_port", guest: 5555, host: 5553
+
+end
+
+config.vm.define "v4" do |v|
+  v.vm.box = "centos/7"
+    v.vm.hostname = "v4"
+  v.vbguest.installer_options = { allow_kernel_upgrade: true }
+  v.vm.synced_folder "C:/data/vagrant/playbooks", "/vagrant", type: "virtualbox"
+  v.vm.network "private_network", ip: "192.168.121.4"
+  # v.vm.network "public_network", ip: "192.168.121.8"
+  
+  v.vm.network "forwarded_port", guest: 8080, host: 8084
+  # Postgres
+  v.vm.network "forwarded_port", guest: 5432, host: 5430
+  # Redis
+  v.vm.network "forwarded_port", guest: 6379, host: 6347
+  # v.vm.network "forwarded_port", guest: 7770, host: 7771
+  #celery flower port
+  v.vm.network "forwarded_port", guest: 5555, host: 5545
+
+end
+
+
+
+config.vm.define "v6" do |v|
+  v.vm.box = "centos/7"
+  v.vm.hostname = "v6"
+  v.vbguest.installer_options = { allow_kernel_upgrade: true }
+  v.vm.synced_folder "C:/data/vagrant/playbooks", "/vagrant", type: "virtualbox"
+  # v.vm.network "private_network", ip: "192.168.10.11"
+  v.vm.network "private_network", ip: "192.168.121.11"
+  
+  v.vm.network "forwarded_port", guest: 8080, host: 8086
+  # Postgres
+  v.vm.network "forwarded_port", guest: 5432, host: 5436
+  # Redis
+  v.vm.network "forwarded_port", guest: 6379, host: 6374
+  # v.vm.network "forwarded_port", guest: 7770, host: 7779
+  #celery flower port
+  v.vm.network "forwarded_port", guest: 5555, host: 5554
+  
+end
+
+config.vm.define "v5" do |v|
+  v.vm.box = "centos/7"
+  v.vm.hostname = "v5"
+  v.vbguest.installer_options = { allow_kernel_upgrade: true }
+  v.vm.synced_folder "C:/data/vagrant/playbooks", "/vagrant", type: "virtualbox"
+  v.vm.network "private_network", 
+  :virtualbox__network_name => 'secondary_vagrant_private_net',
+  ip: "192.168.121.2", 
+  :virtualbox__netmask => '255.255.255.0',
+  :virtualbox__forward_mode => 'route',
+  :virtualbox__dhcp_enabled => true
+  
+ 
+  v.vm.network "forwarded_port", guest: 8080, host: 8085
+  # Postgres
+  v.vm.network "forwarded_port", guest: 5432, host: 5435
+  # Redis
+  v.vm.network "forwarded_port", guest: 6379, host: 6375
+  v.vm.network "forwarded_port", guest: 7770, host: 7775
+  # celery flower port
+  v.vm.network "forwarded_port", guest: 5555, host: 5556
+
+end
+
+ 
+  
+end
